@@ -9,6 +9,7 @@ goog.require('lime.Layer');
 goog.require('lime.Circle');
 goog.require('lime.Polygon');
 goog.require('lime.Label');
+goog.require('lime.fill.LinearGradient');
 goog.require('lime.animation.Spawn');
 goog.require('lime.animation.FadeTo');
 goog.require('lime.animation.ScaleTo');
@@ -16,32 +17,18 @@ goog.require('lime.animation.MoveTo');
 goog.require('lime.transitions.Dissolve');
 goog.require('goog.events.KeyCodes');
 goog.require('goog.math.Box');
+goog.require('goog.math.Coordinate');
 
-function positionTanksOn(mountain, tank) {
-  var fallDown = new lime.animation.MoveTo(-375, 230).setSpeed(1).setEasing(lime.animation.Easing.EASEINOUT);
-  function collision(target) {
-    var tankBox = tank.getBoundingBox();
-    var mountainBox = mountain.getBoundingBox();
-    while (goog.math.Box.intersectsWithPadding(tankBox, mountainBox, 1)) {
-      lime.scheduleManager.unschedule(collision);
-      fallDown.stop();
-      var degreeStart = tank.getRotation();
-      var position = tank.getPosition();
-      tank.setRotation(tank.getRotation() + 1);
-      while (goog.math.Box.intersectsWithPadding(tankBox, mountainBox, 1)) {
-        tank.setRotation(tank.getRotation() + 1);
-        if (degreeStart === tank.getRotation()) {
-          break;
-        }
-      }
-      var coordinate = new goog.math.Coordinate(tank.getPosition().x, tank.getPosition().y + 1);
-      tank.setPosition(coordinate);
-    }
-  }
-  lime.scheduleManager.schedule(collision);
-  tank.setPosition(-375, -230);
-  tank.runAction(fallDown);
-}
+goog.require('box2d.BodyDef');
+goog.require('box2d.BoxDef');
+goog.require('box2d.CircleDef');
+goog.require('box2d.CircleShape');
+goog.require('box2d.PolyDef');
+goog.require('box2d.Vec2');
+goog.require('box2d.JointDef');
+goog.require('box2d.MouseJointDef');
+goog.require('box2d.World');
+goog.require('box2d.Vec2');
 
 // entrypoint
 audica.tanks.start = function () {
@@ -60,21 +47,11 @@ audica.tanks.start = function () {
   var background = new lime.Sprite();
   background.setPosition(0, 0);
   background.setFill('mountains.png');
-  var tank = new lime.Sprite();
-  tank.setFill('tank.png');
-  tank.setSize(50, 20);
-  var mountain = new lime.Polygon();
-  mountain.addPoints(-400, 0, 0, -30, 400, 0, 400, -2, -400, -2);
-  mountain.setFill(0, 100, 0);
-  mountain.setPosition(0, 0);
-  mountain.setStroke(1, '#f00');
 
   var layer = new lime.Layer();
   layer.setRenderer(lime.Renderer.CANVAS);
   layer.setPosition(400, 240);
   layer.appendChild(background);
-  layer.appendChild(tank);
-  layer.appendChild(mountain);
 
   var gameScene = new lime.Scene();
   gameScene.appendChild(layer);
@@ -91,7 +68,6 @@ audica.tanks.start = function () {
         }
       });
 
-      positionTanksOn(mountain, tank);
       director.replaceScene(gameScene, lime.transitions.Dissolve);
     });
   });
@@ -101,6 +77,80 @@ audica.tanks.start = function () {
   menuScene.appendChild(title);
 
   director.replaceScene(menuScene, lime.transitions.Dissolve);
+
+
+  var gravity = new box2d.Vec2(0, 200);
+  var bounds = new box2d.AABB();
+  bounds.minVertex.Set(-800, -400);
+  bounds.maxVertex.Set(2 * 800, 2 * 400);
+  var world = new box2d.World(bounds, gravity, false);
+
+  function createGround() {
+    var ground = new lime.Polygon();
+    ground.addPoint(new goog.math.Coordinate(-400, 48));
+    var poly = [];
+    for (var i=(-400); i<401; i = i+10) {
+      var y = 47 - (Math.random() * 30);
+      poly.push(new box2d.Vec2(i, y));
+      ground.addPoint(new goog.math.Coordinate(i, y));
+    }
+    ground.addPoint(new goog.math.Coordinate(400, 48));
+    ground.setFill(255, 0, 0);
+    layer.appendChild(ground);
+
+    box2d.Settings.b2_maxPolyVertices = poly.length;
+
+    var shapeDef = new box2d.PolyDef();
+    shapeDef.restitution = 0.9;
+    shapeDef.density = 0;
+    shapeDef.friction = 1;
+    shapeDef.SetVertices(poly);
+
+    var bodyDef = new box2d.BodyDef;
+    bodyDef.position.Set(0, 0);
+    bodyDef.AddShape(shapeDef);
+
+    ground._body = world.CreateBody(bodyDef);
+    return ground;
+  }
+
+  function createTank () {
+    var tank = new lime.Sprite();
+    tank.setFill('tank.png');
+    tank.setSize(50, 20);
+    layer.appendChild(tank);
+
+    var shapeDef = new box2d.CircleDef;
+    shapeDef.restitution = 0.9;
+    shapeDef.density = 5;
+    shapeDef.friction = 1;
+
+    var bodyDef = new box2d.BodyDef;
+    bodyDef.position.Set(0, -200);
+    bodyDef.angularDamping = .001;
+    bodyDef.AddShape(shapeDef);
+
+    tank._body = world.CreateBody(bodyDef);
+    return tank;
+  }
+
+  function updateFromBody(shape){
+    var pos = shape._body.GetCenterPosition();
+    var rot = shape._body.GetRotation();
+    shape.setRotation(-rot / Math.PI * 180);
+    shape.setPosition(pos);
+  }
+
+  var ground = createGround();
+  var tank = createTank();
+
+  lime.scheduleManager.schedule(function(dt) {
+    if(dt>100) dt=100; // long delays(after pause) cause false collisions
+    world.Step(dt / 1000, 3);
+
+    updateFromBody(ground);
+    updateFromBody(tank);
+  },this);
 };
 
 //this is required for outside access after code is compiled in ADVANCED_COMPILATIONS mode
