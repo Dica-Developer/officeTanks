@@ -1,0 +1,125 @@
+{
+  "startY": 75,
+  "tiles": [
+    {
+      "width": 50,
+      "angle": 1.57
+    },
+    {
+      "width": 50,
+      "angle": 0
+    },
+    {
+      "width": 50,
+      "angle": -0.05
+    },
+    {
+      "width": 50,
+      "angle": -0.1
+    },
+    {
+      "width": 50,
+      "angle": -0.15
+    },
+    {
+      "width": 50,
+      "angle": -0.1
+    },
+    {
+      "width": 50,
+      "angle": 0
+    },
+    {
+      "width": 50,
+      "angle": 0.05
+    },
+    {
+      "width": 50,
+      "angle": 0.07
+    },
+    {
+      "width": 50,
+      "angle": 0
+    },
+    {
+      "width": 50,
+      "angle": -0.07
+    },
+    {
+      "width": 50,
+      "angle": -0.1
+    },
+    {
+      "width": 50,
+      "angle": -0.15
+    },
+    {
+      "width": 50,
+      "angle": -0.2
+    },
+    {
+      "width": 50,
+      "angle": -0.25
+    },
+    {
+      "width": 50,
+      "angle": -0.3
+    },
+    {
+      "width": 50,
+      "angle": -0.4
+    },
+    {
+      "width": 50,
+      "angle": -0.5
+    },
+    {
+      "width": 50,
+      "angle": -0.5
+    },
+    {
+      "width": 50,
+      "angle": -0.4
+    },
+    {
+      "width": 50,
+      "angle": -0.2
+    },
+    {
+      "width": 50,
+      "angle": -0.25
+    },
+    {
+      "width": 50,
+      "angle": -0.15
+    },
+    {
+      "width": 50,
+      "angle": -0.05
+    },
+    {
+      "width": 50,
+      "angle": 0
+    },
+    {
+      "width": 50,
+      "angle": 0.5
+    },
+    {
+      "width": 50,
+      "angle": 1
+    },
+    {
+      "width": 50,
+      "angle": 1
+    },
+    {
+      "width": 50,
+      "angle": 0.5
+    },
+    {
+      "width": 50,
+      "angle": 1.57
+    }
+  ]
+}
