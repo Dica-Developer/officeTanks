@@ -1,7 +1,7 @@
 {
-  "name": "box2d",
-  "description": "A box2D test suite",
-  "version": "0.0.0",
+  "name": "Office Tanks",
+  "description": "",
+  "version": "0.0.1",
   "engines": {
     "node": ">= 0.8.0"
   },
@@ -9,16 +9,10 @@
     "test": "grunt qunit"
   },
   "author": {
-    "name": "Author Name",
-    "email": "email@domain.com",
-    "url": "http://bower.io/"
+    "name": "DicaDeveloper",
+    "email": "",
+    "url": "https://github.com/Dica-Developer/"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/danheberden/gith/blob/master/LICENSE-MIT"
-    }
-  ],
   "devDependencies": {
     "grunt": "~0.4.0",
     "grunt-contrib-copy": "~0.4.0",
