@@ -24,6 +24,11 @@ define([
       STAGE.addChild(ball.view);
     }*/
 
+    var img = queue.getResult("imgTank");
+    var wheel = queue.getResult("imgBall");
+    tank = new Tank(world, SCALE, img, wheel, Math.random() * 1200 / SCALE, 0);
+    STAGE.addChild(tank.view);
+
     ground.new(ground1, imgGrass);
 
     _.each(ground.tiles, function(tile){
@@ -79,12 +84,12 @@ define([
 
     setDebugDraw();
 
-    $('#debug').on('click', function(e){
-      var img = queue.getResult("imgTank");
-      var wheel = queue.getResult("imgBall");
-      tank = new Tank(world, SCALE, img, wheel, Math.random() * 1200 / SCALE, 0);
-      STAGE.addChild(tank.view);
-    });
+//    $('#debug').on('click', function(e){
+//      var img = queue.getResult("imgTank");
+//      var wheel = queue.getResult("imgBall");
+//      tank = new Tank(world, SCALE, img, wheel, Math.random() * 1200 / SCALE, 0);
+//      STAGE.addChild(tank.view);
+//    });
 
     $('#debug').on('keyup', function(e){
       console.log(tank);
