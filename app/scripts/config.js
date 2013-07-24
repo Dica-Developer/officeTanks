@@ -9,7 +9,7 @@ require.config({
     "box2dWrapper": "box2dWrapper",
     "settings": "settings",
     "ground": "ground",
-    "ball": "ball",
+    "circle": "circle",
     "tank": "tank"
   },
   shim: {

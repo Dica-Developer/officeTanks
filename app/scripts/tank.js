@@ -1,5 +1,5 @@
 /*global define, createjs*/
-define(['lodash', 'box2dWrapper', 'ball'], function(_, b2, Ball){
+define(['lodash', 'box2dWrapper', 'circle'], function(_, b2, Circle){
   'use strict';
   var SCALE;
 
@@ -18,13 +18,13 @@ define(['lodash', 'box2dWrapper', 'ball'], function(_, b2, Ball){
 
     var bodyDef = new b2.BodyDef();
     bodyDef.type = b2.Body.b2_dynamicBody;
-    bodyDef.position.x = x
+    bodyDef.position.x = x;
     bodyDef.position.y = y;
 
     this.view.body = WORLD.CreateBody(bodyDef);
 
     var bodyCenter = this.view.body.GetWorldCenter();
-    var wheel1 = new Ball(WORLD, SCALE, wheel, bodyCenter.x - (70 / SCALE), bodyCenter.y + (20 / SCALE));
+    var wheel1 = new Circle(WORLD, SCALE, wheel, 25, bodyCenter.x - (70 / SCALE), bodyCenter.y + (20 / SCALE));
     var joint1 = new b2.RevoluteJointDef();
     joint1.Initialize(wheel1.view.body, this.view.body, wheel1.view.body.GetWorldCenter());
     joint1.enableMotor = true;
@@ -32,7 +32,7 @@ define(['lodash', 'box2dWrapper', 'ball'], function(_, b2, Ball){
     joint1.maxMotorTorque = 500;
     this.motor1 = WORLD.CreateJoint(joint1);
 
-    var wheel2 = new Ball(WORLD, SCALE, wheel, bodyCenter.x + (70 / SCALE), bodyCenter.y + (20 / SCALE));
+    var wheel2 = new Circle(WORLD, SCALE, wheel, 25, bodyCenter.x + (70 / SCALE), bodyCenter.y + (20 / SCALE));
     var joint2 = new b2.RevoluteJointDef();
     joint2.Initialize(wheel2.view.body, this.view.body, wheel2.view.body.GetWorldCenter());
     joint2.enableMotor = true;

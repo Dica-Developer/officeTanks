@@ -5,9 +5,9 @@ define([
   'lodash',
   'box2dWrapper',
   'ground',
-  'ball',
+  'circle',
   'tank'
-], function ($, _, b2, Ground, Ball, Tank) {
+], function ($, _, b2, Ground, Circle, Tank) {
 
   'use strict';
   var world, CANVAS, CANVAS_CTX, DEBUG, DEBUG_CTX, SCALE = 30, STAGE, ground, queue, tank;
@@ -16,8 +16,8 @@ define([
 
     var ground1 = queue.getResult("ground1");
     var imgGrass = queue.getResult("imgGrass");
-    var imgBall = queue.getResult("imgBall");
-    var imgTank = queue.getResult("imgTank");
+//    var imgBall = queue.getResult("imgBall");
+//    var imgTank = queue.getResult("imgTank");
 
     /*for(var i = 0; i < 10; i++){
       var ball = new Ball(world, SCALE, imgBall, Math.random() * 1200 / SCALE, 0);
@@ -104,9 +104,9 @@ define([
   }
 
   function tick(){
-    STAGE.update();
+//    STAGE.update();
     world.Step(1/60, 10, 10);
-//    world.DrawDebugData();
+    world.DrawDebugData();
     world.ClearForces();
   }
 
