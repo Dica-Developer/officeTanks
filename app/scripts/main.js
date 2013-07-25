@@ -26,8 +26,7 @@ define([
 
     var img = queue.getResult("imgTank");
     var wheel = queue.getResult("imgBall");
-    tank = new Tank(world, SCALE, img, wheel, Math.random() * 1200 / SCALE, 0);
-    STAGE.addChild(tank.view);
+    tank = new Tank(world, STAGE, SCALE, img, wheel, Math.random() * 1200 / SCALE, 0);
 
     ground.new(ground1, imgGrass);
 
@@ -104,7 +103,7 @@ define([
   }
 
   function tick(){
-//    STAGE.update();
+    STAGE.update();
     world.Step(1/60, 10, 10);
     world.DrawDebugData();
     world.ClearForces();

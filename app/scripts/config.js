@@ -10,6 +10,7 @@ require.config({
     "settings": "settings",
     "ground": "ground",
     "circle": "circle",
+    "box": "box",
     "tank": "tank"
   },
   shim: {

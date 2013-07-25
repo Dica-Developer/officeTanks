@@ -2,28 +2,30 @@
 define(['lodash', 'box2dWrapper'], function(_, b2){
   'use strict';
 
-  function Circle(WORLD, SCALE, image, radius, x, y){
+  function Box(world, scale, image, width, height, x, y){
+    this.x = x;
+    this.y = y;
     this.view = new createjs.Bitmap(image);
-    this.view.scale = SCALE;
-    this.view.regX = this.view.regY = radius;
+    this.view.scale = scale;
 
     var fixDef = new b2.FixtureDef();
     fixDef.density = 1.0;
     fixDef.friction = 0.5;
     fixDef.restitution = 0;
-    fixDef.shape = new b2.CircleShape(radius / SCALE);
+    fixDef.shape = new b2.PolygonShape();
+    fixDef.shape.SetAsBox(width / 2 / this.view.scale, height / 2 / this.view.scale);
 
     var bodyDef = new b2.BodyDef();
     bodyDef.type = b2.Body.b2_dynamicBody;
-    bodyDef.position.x = x;
-    bodyDef.position.y = y;
+    bodyDef.position.x = this.x;
+    bodyDef.position.y = this.y;
 
-    this.view.body = WORLD.CreateBody(bodyDef);
+    this.view.body = world.CreateBody(bodyDef);
     this.view.body.CreateFixture(fixDef);
     this.view.onTick = tick;
   }
 
-  Circle.prototype.getBody = function(){
+  Box.prototype.getBody = function(){
     return this.view.body;
   };
 
@@ -33,5 +35,5 @@ define(['lodash', 'box2dWrapper'], function(_, b2){
     this.rotation = this.body.GetAngle() * (180/Math.PI);
   };
 
-  return Circle;
+  return Box;
 });
