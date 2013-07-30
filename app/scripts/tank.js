@@ -32,20 +32,50 @@ define([
     this.stage.addChild(this.tube.view);
     var tubeCenter = this.tube.getBody().GetWorldCenter();
 
-    this.canon = new Box(this.world, this.scale, "", 200, 10, tubeCenter.x + (140 / this.scale), tubeCenter.y - (25 / this.scale));
+    this.canon = new Circle(this.world, this.scale, "", 10, tubeCenter.x + (70 / this.scale), tubeCenter.y - (35 / this.scale));
     this.stage.addChild(this.canon.view);
     var canonBody = this.canon.view.body;
     var canonCenter = canonBody.GetWorldCenter();
-    var canonJoinPoint = new b2.Vec2(canonCenter.x - (70 / this.scale), canonCenter.y);
+    var canonJoinPoint = new b2.Vec2(tubeCenter.x + (70 / this.scale), canonCenter.y);
+
+//    var tankCanonJoinPoint = new b2.Vec2(tubeCenter.x - (70 / this.scale), tubeCenter.y);
+
     var canonJoint = new b2.RevoluteJointDef();
     canonJoint.Initialize(canonBody, this.tube.getBody(), canonJoinPoint);
     canonJoint.enableMotor = true;
-    canonJoint.lowerAngle = -0.25 * Math.PI;
-    canonJoint.upperAngle = 0.25 * Math.PI;
+    canonJoint.lowerAngle = -0.15 * Math.PI;
+    canonJoint.upperAngle = 0.50 * Math.PI;
     canonJoint.enableLimit = true;
-    canonJoint.maxMotorTorque = 80;
+    canonJoint.maxMotorTorque = 5000;
     canonJoint.motorSpeed = 0;
     this.canonMotor = this.world.CreateJoint(canonJoint);
+
+    this.canonTop = new Box(this.world, this.scale, "", 100, 1, tubeCenter.x + (120 / this.scale), tubeCenter.y - (40 / this.scale));
+    var canonTopCenter = this.canonTop.view.body.GetWorldCenter();
+    var canonTopJoinPoint = new b2.Vec2(canonTopCenter.x - (50 / this.scale), canonTopCenter.y);
+    var canonTopJoint = new b2.WeldJointDef();
+    canonTopJoint.Initialize(canonBody, this.canonTop.view.body, canonTopJoinPoint);
+    this.world.CreateJoint(canonTopJoint);
+
+    this.canonBottom = new Box(this.world, this.scale, "", 100, 1, tubeCenter.x + (120 / this.scale), tubeCenter.y - (30 / this.scale));
+    var canonBottomCenter = this.canonBottom.view.body.GetWorldCenter();
+    var canonBottomJoinPoint = new b2.Vec2(canonBottomCenter.x - (50 / this.scale), canonBottomCenter.y);
+    var canonBottomJoint = new b2.WeldJointDef();
+    canonBottomJoint.Initialize(canonBody, this.canonBottom.view.body, canonBottomJoinPoint);
+    this.world.CreateJoint(canonBottomJoint);
+
+    this.canonEnd = new Box(this.world, this.scale, "", 1, 10, canonTopCenter.x + (50 / this.scale), canonTopCenter.y + (5 / this.scale));
+    var canonEndCenter = this.canonTop.view.body.GetWorldCenter();
+
+    var canonEndJoinPointTop = new b2.Vec2(canonEndCenter.x + (50 / this.scale), canonEndCenter.y);
+    var canonEndJointTop = new b2.WeldJointDef();
+    canonEndJointTop.Initialize(this.canonTop.view.body, this.canonEnd.view.body, canonEndJoinPointTop);
+    this.world.CreateJoint(canonEndJointTop);
+
+    var canonEndJoinPointBottom = new b2.Vec2(canonEndCenter.x + (50 / this.scale), canonEndCenter.y);
+    var canonEndJointBottom = new b2.WeldJointDef();
+    canonEndJointBottom.Initialize(this.canonBottom.view.body, this.canonEnd.view.body, new b2.Vec2(canonBottomCenter.x + (50 / this.scale), canonBottomCenter.y), canonEndJoinPointBottom);
+    this.world.CreateJoint(canonEndJointBottom);
 
     this.rearWheel = new Circle(
       this.world,
@@ -123,10 +153,15 @@ define([
     this.rearMotor.SetMotorSpeed(0);
   };
 
+  Tank.prototype.shoot = function() {
+    // create bullet
+    // position on left end of canon
+    // apply force to the bullet
+  }
+
   Tank.prototype.addToStage = function(){
 
   };
-
 
   var tick = function(){
     this.x = this.body.GetPosition().x * this.scale;

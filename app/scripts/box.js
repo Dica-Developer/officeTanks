@@ -2,14 +2,14 @@
 define(['lodash', 'box2dWrapper'], function(_, b2){
   'use strict';
 
-  function Box(world, scale, image, width, height, x, y){
+  function Box(world, scale, image, width, height, x, y, density){
     this.x = x;
     this.y = y;
     this.view = new createjs.Bitmap(image);
     this.view.scale = scale;
 
     var fixDef = new b2.FixtureDef();
-    fixDef.density = 1.0;
+    fixDef.density = density || 1.0;
     fixDef.friction = 0.5;
     fixDef.restitution = 0;
     fixDef.shape = new b2.PolygonShape();
