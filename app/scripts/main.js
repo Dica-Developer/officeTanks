@@ -91,11 +91,26 @@ define([
 //    });
 
     $('#debug').on('keyup', function(e){
-      console.log(tank);
+      if (e.which === 39 || e.which === 37) {
+        tank.stop();
+      } else if (e.which === 40 || e.which === 38) {
+        tank.stopCanon();
+      } else {
+        console.log(e.which);
+      }
+    });
+
+    $('#debug').on('keydown', function(e){
       if (e.which === 39) {
         tank.increaseSpeed();
       } else if (e.which === 37) {
         tank.decreaseSpeed();
+      } else if (e.which === 40) {
+        tank.lowerCanon();
+      } else if (e.which === 38) {
+        tank.liftCanon();
+      } else {
+        console.log(e.which);
       }
     });
 

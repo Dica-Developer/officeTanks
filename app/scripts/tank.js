@@ -20,6 +20,7 @@ define([
     this.rearWheel = null;
     this.rearMotor = null;
     this.wheelImg = wheelImg;
+    this.canonMotor = null;
 
     this.buildTank();
   }
@@ -29,8 +30,23 @@ define([
     this.tube.view.regX = 70;
     this.tube.view.regY = 44;
     this.stage.addChild(this.tube.view);
-
     var tubeCenter = this.tube.getBody().GetWorldCenter();
+
+    this.canon = new Box(this.world, this.scale, "", 200, 10, tubeCenter.x + (140 / this.scale), tubeCenter.y - (25 / this.scale));
+    this.stage.addChild(this.canon.view);
+    var canonBody = this.canon.view.body;
+    var canonCenter = canonBody.GetWorldCenter();
+    var canonJoinPoint = new b2.Vec2(canonCenter.x - (70 / this.scale), canonCenter.y);
+    var canonJoint = new b2.RevoluteJointDef();
+    canonJoint.Initialize(canonBody, this.tube.getBody(), canonJoinPoint);
+    canonJoint.enableMotor = true;
+    canonJoint.lowerAngle = -0.25 * Math.PI;
+    canonJoint.upperAngle = 0.25 * Math.PI;
+    canonJoint.enableLimit = true;
+    canonJoint.maxMotorTorque = 80;
+    canonJoint.motorSpeed = 0;
+    this.canonMotor = this.world.CreateJoint(canonJoint);
+
     this.rearWheel = new Circle(
       this.world,
       this.scale,
@@ -88,6 +104,23 @@ define([
       this.frontMotor.SetMotorSpeed(decreased);
       this.rearMotor.SetMotorSpeed(decreased);
     }
+  };
+
+  Tank.prototype.liftCanon = function(){
+    this.canonMotor.SetMotorSpeed(0.5);
+  };
+
+  Tank.prototype.lowerCanon = function(){
+    this.canonMotor.SetMotorSpeed(-0.5);
+  };
+
+  Tank.prototype.stopCanon = function(){
+    this.canonMotor.SetMotorSpeed(0);
+  };
+
+  Tank.prototype.stop = function(){
+    this.frontMotor.SetMotorSpeed(0);
+    this.rearMotor.SetMotorSpeed(0);
   };
 
   Tank.prototype.addToStage = function(){
